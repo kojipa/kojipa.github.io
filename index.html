@@ -228,6 +228,7 @@ function render(){
   res.innerHTML = `<div class="pick">
       <span class="name">👉 ${esc(a.name)}</span>
       <a class="btn main" href="${m.url}">${m.label}</a>
+      ${a.extra?`<a class="btn sub" href="${a.extra.url}">${a.extra.label}</a>`:""}
       <a class="btn sub" href="${GH+a.repo}">くわしく</a>
       <span class="why">${why}${a.pre?" いまは試験版です。":""}</span>
     </div>`;
