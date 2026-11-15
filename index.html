@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EVモニター アプリ案内</title>
+<meta name="description" content="日産アリア・2代目リーフ(ZE1)用の非公式モニターアプリの案内ページ。どれを入れればいいかがわかります。">
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1c2430; --sub:#5b6676; --line:#e2e6ec;
+  --accent:#0a7c86; --accent-weak:#e3f4f5; --ariya:#7a5af5; --leaf:#1f9d55; --mini:#e07a12;
+  --warn-bg:#fff6e0; --warn-line:#f0d58a;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#11151b; --card:#1a2028; --text:#e6eaf0; --sub:#9aa5b4; --line:#2a323d;
+    --accent:#3cc3cf; --accent-weak:#16343a; --ariya:#a28cff; --leaf:#4cc983; --mini:#f3a14b;
+    --warn-bg:#2d2615; --warn-line:#5c4b1f;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7}
+a{color:var(--accent)}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px}
+header{padding:40px 0 20px}
+header h1{font-size:1.7rem;margin:0 0 6px;letter-spacing:.02em}
+header p{margin:0;color:var(--sub)}
+.note{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:10px;padding:10px 14px;font-size:.92rem;margin:16px 0 0}
+section{margin:36px 0}
+h2{font-size:1.25rem;margin:0 0 14px;padding-left:10px;border-left:4px solid var(--accent)}
+
+/* えらぶ */
+.chooser{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.q{margin:0 0 16px}
+.q-label{font-weight:700;margin-bottom:8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:2px solid var(--line);background:transparent;color:var(--text);border-radius:999px;padding:8px 16px;font-size:1rem;cursor:pointer;font-family:inherit}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-weak);font-weight:700}
+.opt:disabled{opacity:.35;cursor:not-allowed}
+.result{margin-top:6px;border-top:1px dashed var(--line);padding-top:16px;min-height:60px}
+.result .hint{color:var(--sub)}
+.pick{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.pick .name{font-size:1.2rem;font-weight:800}
+.pick .why{color:var(--sub);font-size:.95rem;flex-basis:100%}
+
+/* 一覧 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.card.hl{outline:3px solid var(--accent)}
+.thumb{aspect-ratio:16/9;background:var(--accent-weak);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb .ph{font-size:2.4rem}
+.body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:.75rem;border-radius:6px;padding:1px 8px;font-weight:700;color:#fff}
+.tag.ariya{background:var(--ariya)} .tag.leaf{background:var(--leaf)} .tag.mini{background:var(--mini)}
+.tag.plain{background:transparent;color:var(--sub);border:1px solid var(--line)}
+.tag.pre{background:transparent;color:var(--mini);border:1px solid var(--mini)}
+.card h3{margin:2px 0 0;font-size:1.08rem}
+.card .desc{margin:0;color:var(--sub);font-size:.9rem;flex:1}
+.ver{font-size:.85rem;color:var(--sub)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.btn{display:inline-block;text-decoration:none;border-radius:8px;padding:7px 14px;font-weight:700;font-size:.92rem}
+.btn.main{background:var(--accent);color:#fff}
+.btn.sub{border:1px solid var(--line);color:var(--text)}
+
+/* 共通 */
+.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px 18px}
+.box ul{padding-left:1.2em}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+.tbl{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--sub);font-weight:600}
+tr:last-child td{border-bottom:none}
+footer{color:var(--sub);font-size:.85rem;padding:24px 0 48px;border-top:1px solid var(--line);margin-top:40px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>EVモニター アプリ案内</h1>
+  <p>日産アリア・2代目リーフ(ZE1)のバッテリーの状態などを、OBD2アダプター経由で読み取って表示するアプリです。</p>
+  <div class="note">⚠️ 個人が作った<b>非公式</b>のアプリです。日産自動車とは関係ありません。車には値を読み取る命令だけを送ります。</div>
+</header>
+
+<section id="choose">
+  <h2>どれを入れればいい?</h2>
+  <div class="chooser">
+    <div class="q">
+      <div class="q-label">① 車は?</div>
+      <div class="opts" data-q="car">
+        <button class="opt" data-v="ariya" aria-pressed="false">日産アリア</button>
+        <button class="opt" data-v="leaf" aria-pressed="false">2代目リーフ(ZE1)</button>
+      </div>
+    </div>
+    <div class="q">
+      <div class="q-label">② 何で見る?</div>
+      <div class="opts" data-q="dev">
+        <button class="opt" data-v="new" aria-pressed="false">Android 8.0 以上</button>
+        <button class="opt" data-v="old" aria-pressed="false">Android 5〜7・重く感じる古い端末</button>
+        <button class="opt" data-v="m5" aria-pressed="false">M5Stack(小さな専用画面)</button>
+      </div>
+    </div>
+    <div class="result" id="result"><span class="hint">①と②を選ぶと、おすすめが出ます。</span></div>
+  </div>
+</section>
+
+<section id="list">
+  <h2>アプリ一覧</h2>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="compare">
+  <h2>ちがいの早見表</h2>
+  <div class="tbl">
+  <table>
+    <thead><tr><th></th><th>通常版</th><th>Lite版</th><th>Mini</th></tr></thead>
+    <tbody>
+      <tr><td>動くもの</td><td>Android 8.0以上</td><td>Android 5.0以上</td><td>M5StickS3 / Core2</td></tr>
+      <tr><td>アダプター</td><td>Bluetooth・BLE・Wi-Fi</td><td>Bluetooth(クラシック)のみ</td><td>StickS3はBLE・Wi-Fi<br>Core2はどれでも</td></tr>
+      <tr><td>画面</td><td>光のアニメーション・記録が多い</td><td>静止画+色(軽い)</td><td>温度・残量などを小さく</td></tr>
+      <tr><td>入れ方</td><td>APKをダウンロード</td><td>APKをダウンロード</td><td>ブラウザから書き込み</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="common">
+  <h2>みんな共通</h2>
+  <div class="box">
+    <ul>
+      <li><b>ELM327互換のOBD2アダプター</b>が必要です(対応する通信方式は上の表を見てください)。</li>
+      <li>アダプターは同時に1つのアプリしかつながりません。つながらないときは、他のOBDアプリを終了→アダプターの抜き差し→車の電源の入れ直し、の順に試してください。</li>
+      <li>アダプターを挿したままにすると12Vバッテリーが減ることがあります。使わないときは抜いてください。</li>
+      <li>使い方・不具合の報告先は、それぞれのページ(「くわしく」)に書いてあります。</li>
+      <li>使用によって生じた損害について作者は責任を負いません。自己責任でご利用ください。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  非公式・個人制作。Nissan、ARIYA、LEAF は日産自動車の商標です。<br>
+  <a href="https://github.com/kojipa">GitHub</a>
+</footer>
+</div>
+
+<script>
+const GH = "https://github.com/kojipa/";
+const RAW = "https://raw.githubusercontent.com/kojipa/";
+const APPS = [
+  {id:"ariya-new", car:"ariya", dev:"new", repo:"ariyamonitor-releases", name:"Ariya Monitor",
+   tag:["ariya","アリア"], kind:"通常版", img:"main/images/home_driving.jpg",
+   desc:"いちばん機能が多い版。セル96本の電圧、充電履歴、トリップ、エコ運転チャレンジなど。", ver:"v0.4.9"},
+  {id:"ariya-old", car:"ariya", dev:"old", repo:"ariyamonitor-lite-releases", name:"Ariya Monitor Lite",
+   tag:["ariya","アリア"], kind:"Lite版", img:null,
+   desc:"古いAndroidや古いFireタブレット向けの軽量版。約400KB。", ver:"v0.3.1"},
+  {id:"ariya-m5", car:"ariya", dev:"m5", repo:"ariya-monitor-mini", name:"Ariya Monitor Mini",
+   tag:["ariya","アリア"], kind:"M5Stack", img:null, ph:"📟",
+   desc:"車に置きっぱなしにできる小さな画面。パソコンのChrome/Edgeから書き込みます。",
+   main:{label:"書き込みページ", url:"https://kojipa.github.io/ariya-monitor-mini/"}},
+  {id:"leaf-new", car:"leaf", dev:"new", repo:"ze1monitor-releases", name:"ZE1 Monitor",
+   tag:["leaf","リーフ ZE1"], kind:"通常版", img:"main/screenshots/home_driving.jpg", pre:true,
+   desc:"2代目リーフ用。SOH、セル96本の電圧、急速・普通充電の回数、トリップなど。", ver:"v0.1.0"},
+  {id:"leaf-old", car:"leaf", dev:"old", repo:"ze1monitor-lite-releases", name:"ZE1 Monitor Lite",
+   tag:["leaf","リーフ ZE1"], kind:"Lite版", img:"main/screenshots/home_charging.jpg", pre:true,
+   desc:"2代目リーフ用の軽量版。Android 5.0以上、約450KB。", ver:"v0.1.0"},
+];
+
+const grid = document.getElementById("grid");
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]))}
+function mainLink(a){return a.main || {label:"ダウンロード", url:GH+a.repo+"/releases/latest"}}
+
+APPS.forEach(a=>{
+  const m = mainLink(a);
+  const el = document.createElement("article");
+  el.className = "card"; el.id = "card-"+a.id;
+  el.innerHTML = `
+    <div class="thumb">${a.img ? `<img loading="lazy" src="${RAW+a.repo+"/"+a.img}" alt="${esc(a.name)}の画面">` : `<span class="ph">${a.ph||"📱"}</span>`}</div>
+    <div class="body">
+      <div class="tags"><span class="tag ${a.tag[0]}">${a.tag[1]}</span><span class="tag plain">${a.kind}</span>${a.pre?`<span class="tag pre">試験版</span>`:""}</div>
+      <h3>${esc(a.name)}</h3>
+      <p class="desc">${esc(a.desc)}</p>
+      ${a.ver?`<div class="ver" data-repo="${a.repo}">最新: ${a.ver}</div>`:""}
+      <div class="btns"><a class="btn main" href="${m.url}">${m.label}</a><a class="btn sub" href="${GH+a.repo}">くわしく</a></div>
+    </div>`;
+  grid.appendChild(el);
+});
+
+// 最新版の番号をGitHubから取り直す(失敗したら書いてある番号のまま)
+document.querySelectorAll(".ver[data-repo]").forEach(async el=>{
+  try{
+    const r = await fetch(`https://api.github.com/repos/kojipa/${el.dataset.repo}/releases?per_page=1`);
+    if(!r.ok) return;
+    const [x] = await r.json();
+    if(x) el.textContent = "最新: " + x.tag_name + "(" + x.published_at.slice(0,10).replace(/-/g,"/") + ")";
+  }catch(e){}
+});
+
+// えらぶ
+const state = {car:null, dev:null};
+document.querySelectorAll(".opts").forEach(g=>{
+  g.addEventListener("click", e=>{
+    const b = e.target.closest(".opt"); if(!b || b.disabled) return;
+    state[g.dataset.q] = b.dataset.v;
+    g.querySelectorAll(".opt").forEach(o=>o.setAttribute("aria-pressed", o===b));
+    render();
+  });
+});
+function render(){
+  const m5 = document.querySelector('[data-q="dev"] [data-v="m5"]');
+  m5.disabled = state.car === "leaf";
+  if(m5.disabled && state.dev === "m5"){ state.dev = null; m5.setAttribute("aria-pressed", false); }
+  document.querySelectorAll(".card").forEach(c=>c.classList.remove("hl"));
+  const res = document.getElementById("result");
+  if(!state.car || !state.dev){
+    res.innerHTML = `<span class="hint">${state.car==="leaf"?"リーフ用のM5Stack版はまだありません。":""}①と②を選ぶと、おすすめが出ます。</span>`;
+    return;
+  }
+  const a = APPS.find(x=>x.car===state.car && x.dev===state.dev);
+  const m = mainLink(a);
+  const why = {
+    new:"Android 8.0以上ならこちら。Bluetooth・BLE・Wi-Fiのアダプターが使えます。",
+    old:"Android 5〜7でも動く軽量版です。アダプターはBluetooth(クラシック)のものだけ使えます。",
+    m5:"M5StickS3(おすすめ)か M5Stack Core2 に書き込んで使います。StickS3はBLEかWi-Fiのアダプターが必要です。"
+  }[state.dev];
+  res.innerHTML = `<div class="pick">
+      <span class="name">👉 ${esc(a.name)}</span>
+      <a class="btn main" href="${m.url}">${m.label}</a>
+      <a class="btn sub" href="${GH+a.repo}">くわしく</a>
+      <span class="why">${why}${a.pre?" いまは試験版です。":""}</span>
+    </div>`;
+  document.getElementById("card-"+a.id).classList.add("hl");
+}
+</script>
+</body>
+</html>
