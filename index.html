@@ -158,7 +158,8 @@ const APPS = [
   {id:"ariya-m5", car:"ariya", dev:"m5", repo:"ariya-monitor-mini", name:"Ariya Monitor Mini",
    tag:["ariya","アリア"], kind:"M5Stack", img:null, ph:"📟",
    desc:"車に置きっぱなしにできる小さな画面。パソコンのChrome/Edgeから書き込みます。",
-   main:{label:"書き込みページ", url:"https://kojipa.github.io/ariya-monitor-mini/"}},
+   main:{label:"書き込みページ", url:"https://kojipa.github.io/ariya-monitor-mini/"},
+   extra:{label:"選び方・買い方", url:"https://kojipa.github.io/ariya-monitor-mini/hardware.html"}},
   {id:"leaf-new", car:"leaf", dev:"new", repo:"ze1monitor-releases", name:"ZE1 Monitor",
    tag:["leaf","リーフ ZE1"], kind:"通常版", img:"main/screenshots/home_driving.jpg", pre:true,
    desc:"2代目リーフ用。SOH、セル96本の電圧、急速・普通充電の回数、トリップなど。", ver:"v0.1.0"},
@@ -182,7 +183,7 @@ APPS.forEach(a=>{
       <h3>${esc(a.name)}</h3>
       <p class="desc">${esc(a.desc)}</p>
       ${a.ver?`<div class="ver" data-repo="${a.repo}">最新: ${a.ver}</div>`:""}
-      <div class="btns"><a class="btn main" href="${m.url}">${m.label}</a><a class="btn sub" href="${GH+a.repo}">くわしく</a></div>
+      <div class="btns"><a class="btn main" href="${m.url}">${m.label}</a>${a.extra?`<a class="btn sub" href="${a.extra.url}">${a.extra.label}</a>`:""}<a class="btn sub" href="${GH+a.repo}">くわしく</a></div>
     </div>`;
   grid.appendChild(el);
 });
