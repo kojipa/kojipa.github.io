@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>はじめてのAriya Monitor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="日産アリアでAriya Monitorを始めるために用意するもの。OBD2アダプターの選び方、古いAndroidでも使えるか、アリアの画面に出す方法をまとめました。">
+<link rel="canonical" href="https://kojipa.github.io/start/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Ariya Monitor / ZE1 Monitor">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:url" content="https://kojipa.github.io/start/">
+<meta property="og:title" content="はじめてのAriya Monitor|用意するもの・つなぎ方">
+<meta property="og:description" content="OBD2アダプターの選び方、古いAndroidでも使えるか、アリアの画面に出す方法をまとめました。">
+<meta property="og:image" content="https://kojipa.github.io/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+/* Layout: 白地にやわらかい色。丸ゴシックの見出し、角の丸いカード、スマホ1列の読み物。白背景をはっきり望まれたので明るい1テーマで固定 */
+:root{
+  --bg:#ffffff; --soft:#f3f8f8; --card:#ffffff; --text:#2b3440; --sub:#6a7482; --line:#e4ecee;
+  --accent:#2a9d9a; --accent-ink:#1d7c79; --accent-weak:#e6f5f4; --peach:#fbeee6; --peach-ink:#b5683f;
+  --ariya:#7b68c8; --ok:#4caf7a; --warn-bg:#fff8e8; --warn-line:#f2dfa8;
+  --round:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --sans:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.85;font-size:16px}
+a{color:var(--accent-ink)}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 8px}
+.back{display:inline-block;margin-top:18px;font-size:.88rem;text-decoration:none;color:var(--sub)}
+header{padding:20px 0 4px;display:flex;flex-direction:column;gap:8px}
+header h1{font-family:var(--round);font-weight:800;font-size:1.75rem;margin:0;line-height:1.4;text-wrap:balance}
+header h1 small{display:block;font-size:.95rem;font-weight:700;color:var(--accent)}
+header p{margin:0;color:var(--sub)}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.toc a{background:var(--soft);border-radius:999px;padding:5px 14px;text-decoration:none;color:var(--text);font-size:.9rem}
+section{margin:48px 0}
+h2{font-family:var(--round);font-weight:800;font-size:1.3rem;margin:0 0 16px;display:flex;align-items:center;gap:10px;text-wrap:balance}
+h2::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 5px var(--accent-weak);flex:none}
+p{margin:0}
+.stack{display:flex;flex-direction:column;gap:14px}
+.box{background:var(--soft);border-radius:18px;padding:16px 20px;min-width:0}
+.box ul,.box ol{margin:0;padding-left:1.3em}
+.box li+li{margin-top:6px}
+.answer{font-family:var(--round);font-size:1.1rem;font-weight:700;color:var(--accent-ink)}
+.note{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:14px;padding:10px 16px;font-size:.92rem}
+
+/* 2つの見方(写真) */
+.ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.way{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.photo{margin:0;aspect-ratio:4/3;max-width:100%;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--sub);font-size:.85rem;text-align:center;padding:12px}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.photo:has(img){padding:0}
+.way .in{padding:14px 18px 18px;display:flex;flex-direction:column;gap:10px}
+.way .lab{font-family:var(--round);font-weight:800;font-size:1.08rem}
+.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.85rem}
+.flow .n{border-radius:999px;padding:2px 11px;background:var(--accent-weak);color:var(--accent-ink);font-weight:700;white-space:nowrap}
+.flow .n.car{background:#efecfa;color:var(--ariya)}
+.flow .e{color:var(--sub);font-size:.75rem;white-space:nowrap}
+.way .need{font-size:.9rem;color:var(--sub)}
+
+/* アダプター */
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pick{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.pick .tag{align-self:flex-start;font-size:.76rem;font-weight:700;border-radius:999px;padding:1px 10px;color:var(--accent-ink);background:var(--accent-weak)}
+.pick .tag.cheap{color:var(--peach-ink);background:var(--peach)}
+.pick .name{font-family:var(--round);font-size:1.08rem;font-weight:800}
+.pick p{font-size:.92rem;color:var(--sub)}
+.shop{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.shop a{font-size:.88rem;font-weight:700;text-decoration:none;border-radius:999px;padding:5px 14px;background:var(--accent-weak);color:var(--accent-ink)}
+.shop a.amz{background:var(--peach);color:var(--peach-ink)}
+.shopnote{font-size:.8rem;color:var(--sub)}
+
+/* Android */
+.tbl{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:20px}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{padding:10px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--sub);font-weight:500;white-space:nowrap;background:var(--soft)}
+tr:last-child td{border-bottom:none}
+td b{white-space:nowrap}
+
+/* 手順 */
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px 18px 14px 62px;position:relative;min-width:0}
+.steps li::before{content:counter(s);position:absolute;left:18px;top:15px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-family:var(--round);font-weight:800;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.steps li b{display:block;font-family:var(--round)}
+.steps li span{color:var(--sub);font-size:.92rem}
+
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-block;text-decoration:none;border-radius:999px;padding:9px 18px;font-weight:700;font-size:.95rem}
+.btn.main{background:var(--accent);color:#fff}
+.btn.subb{background:var(--soft);color:var(--text)}
+a:focus-visible,.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+footer{color:var(--sub);font-size:.82rem;padding:24px 0 48px;border-top:1px solid var(--line);margin-top:48px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="back" href="https://kojipa.github.io/">← アプリの案内ページへ</a>
+
+<header>
+  <h1><small>日産アリアのバッテリーモニター</small>はじめての Ariya Monitor</h1>
+  <p>日産アリアで Ariya Monitor を始めるときに、よく聞かれる3つのことをまとめました。アプリは無料です。</p>
+  <nav class="toc" aria-label="このページの目次">
+    <a href="#ways">スマホ？アリアの画面？</a>
+    <a href="#adapter">アダプターはどれ？</a>
+    <a href="#android">古いAndroidでも大丈夫？</a>
+    <a href="#carscreen">アリアの画面に出すには？</a>
+    <a href="#steps">はじめの手順</a>
+  </nav>
+</header>
+
+<section id="ways">
+  <h2>スマホで使う？アリアの画面で使う？</h2>
+  <p style="margin:0 0 16px">Ariya Monitor は Android のアプリです。入れる先は、次のどちらかを選べます。</p>
+  <div class="ways">
+    <div class="way">
+      <figure class="photo" id="photo-phone">写真：スマホ・タブレットで使っているところ（準備中）</figure>
+      <div class="in">
+      <span class="lab">スマホ・タブレットに入れて使う</span>
+      <div class="flow"><span class="n car">アリア</span><span class="e">挿す →</span><span class="n">アダプター</span><span class="e">無線 →</span><span class="n">Android端末</span></div>
+      <p class="need">用意するもの：OBD2アダプター、Android端末（使っていない古い端末でもOK）</p>
+      </div>
+    </div>
+    <div class="way">
+      <figure class="photo" id="photo-carscreen">写真：アリアの画面に出しているところ（準備中）</figure>
+      <div class="in">
+      <span class="lab">アリアの画面に出して使う</span>
+      <div class="flow"><span class="n car">アリア</span><span class="e">挿す →</span><span class="n">アダプター</span><span class="e">無線 →</span><span class="n">AIボックス</span><span class="e">USB →</span><span class="n car">アリアの画面</span></div>
+      <p class="need">用意するもの：OBD2アダプター、CarPlay AIボックス（Android端末は不要）</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="adapter">
+  <h2>① OBD2アダプターはどれがおすすめ？</h2>
+  <div class="stack">
+    <div class="picks">
+      <div class="pick">
+        <span class="tag">安定重視</span>
+        <span class="name">Vgate vLinker MC+</span>
+        <p>少し高めですが、安定してつながります。迷ったらこちら。Bluetooth と BLE の両方に対応しています。</p>
+        <div class="shop"><a href="https://vgatemall.com/products-detail/i-5/" rel="noopener">メーカーのページ</a><a class="amz" href="https://www.amazon.co.jp/s?k=vLinker+MC%2B" rel="noopener">Amazonで探す</a></div>
+      </div>
+      <div class="pick">
+        <span class="tag cheap">安く始める</span>
+        <span class="name">Zappa ELM327（Bluetooth 4.0 BLE・BT2.0 両対応）</span>
+        <p>作者が開発に使っているものです。</p>
+        <div class="shop"><a class="amz" href="https://www.amazon.co.jp/dp/B09SB5Q2Y8" rel="noopener">Amazonの商品ページ</a></div>
+      </div>
+    </div>
+    <div class="box">
+      <ul>
+        <li>アプリが使えるのは <b>ELM327互換</b> のアダプターです。Bluetooth・BLE・Wi-Fi のどれでもつながります（Lite版は Bluetooth だけ）。</li>
+        <li>とても安い互換品の中には、空気圧・走行距離・外気温・ウインカーが読めないものや、だんだん遅くなるものがあります。</li>
+        <li>「Bluetooth と BLE の両対応」のアダプターは、どちらか片方でしかつながりません。アプリの「設定」→「接続」で選んだほうを使います。</li>
+        <li>挿しっぱなしにすると12Vバッテリーが減ることがあります。長く乗らないときは抜いてください。</li>
+      </ul>
+    </div>
+    <p class="shopnote">リンク先の商品や値段は変わることがあります。買う前に、対応する接続方法（Bluetooth・BLE）を確かめてください。</p>
+  </div>
+</section>
+
+<section id="android">
+  <h2>② 使っていない古いAndroidでも大丈夫？</h2>
+  <div class="stack">
+    <p class="answer">たいてい大丈夫です。Androidのバージョンで入れるアプリが変わります。</p>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Androidのバージョン</th><th>入れるアプリ</th><th>使えるアダプター</th></tr></thead>
+        <tbody>
+          <tr><td><b>8.0 以上</b></td><td><a href="https://github.com/kojipa/ariyamonitor-releases/releases/latest">Ariya Monitor（通常版）</a></td><td>Bluetooth・BLE・Wi-Fi</td></tr>
+          <tr><td><b>5.0〜7</b></td><td><a href="https://github.com/kojipa/ariyamonitor-lite-releases/releases/latest">Ariya Monitor Lite（軽量版）</a></td><td>Bluetooth</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box">
+      <ul>
+        <li>バージョンは、端末の「設定」→「端末情報」（または「デバイス情報」）→「Androidバージョン」で見られます。</li>
+        <li>SIMカードは要りません。Bluetooth（Wi-Fiのアダプターなら Wi-Fi）が使えれば動きます。</li>
+        <li>無料なので、まずは入れて開いてみるのがおすすめです。8.0以上でも、動きが重いと感じたら Lite版も試せます。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="carscreen">
+  <h2>③ アリアの画面に出すには？</h2>
+  <div class="stack">
+    <p class="answer">「CarPlay AIボックス」を使います。</p>
+    <div class="box">
+      <ul>
+        <li>アリアの画面では、Androidのアプリをそのまま動かすことはできません。</li>
+        <li>CarPlay AIボックスは、アリアのUSBにつなぐ小さなAndroid機器です。アリアの画面が Androidタブレットのようになり、そこに Ariya Monitor を入れて使えます。</li>
+        <li>AIボックスを使えば、別に Android端末を用意する必要はありません。</li>
+        <li>アダプターは、AIボックスの Bluetooth（または Wi-Fi）につなぎます。</li>
+      </ul>
+    </div>
+    <div class="pick">
+      <span class="tag">AIボックス</span>
+      <span class="name">CarPlay AIボックス（有線CarPlay対応車用）</span>
+      <p>いろいろなメーカーから出ています。「有線CarPlayの車に対応」「Android 8.0以上」のものを選んでください。</p>
+      <div class="shop"><a class="amz" href="https://www.amazon.co.jp/s?k=CarPlay+AI+Box+Android" rel="noopener">Amazonで探す</a></div>
+    </div>
+    <p class="note">AIボックスは機種によって中身の Androidバージョンや動きが違います。買う前に Android 8.0 以上かどうかを確かめてください。</p>
+  </div>
+</section>
+
+<section id="steps">
+  <h2>はじめの手順</h2>
+  <ol class="steps">
+    <li><b>アプリを入れる</b><span>Android端末（またはAIボックス）のブラウザで、②の表のリンクから最新版のAPKをダウンロードして開きます。「提供元不明のアプリ」の許可を求められたら許可してください。</span></li>
+    <li><b>アダプターを挿す</b><span>車の電源を入れて、OBD2の差し込み口にアダプターを挿します。</span></li>
+    <li><b>Bluetoothのアダプターはペアリング</b><span>Androidの「設定」→「Bluetooth」でペアリングします（PINはたいてい 1234 か 0000）。BLE・Wi-Fiのアダプターはここは飛ばします。</span></li>
+    <li><b>アプリでアダプターを選ぶ</b><span>アプリの「設定」→「接続」→「アダプター」の「変更」で、使うアダプターを選びます。</span></li>
+    <li><b>つながったら完成</b><span>ホーム画面にバッテリーの残量や電力が出てきます。次からはアプリを開くだけで自動でつながります。</span></li>
+  </ol>
+</section>
+
+<section id="trouble">
+  <h2>つながらないときは</h2>
+  <div class="box">
+    <ol>
+      <li>ほかのOBDアプリ（Car Scanner など）を終了する（アダプターは同時に1つのアプリしかつながりません）</li>
+      <li>アダプターを抜いて挿し直す</li>
+      <li>車の電源を入れ直す</li>
+    </ol>
+  </div>
+</section>
+
+<section id="more">
+  <h2>もっと知りたいとき</h2>
+  <div class="btns">
+    <a class="btn main" href="https://github.com/kojipa/ariyamonitor-releases">Ariya Monitor のくわしい説明</a>
+    <a class="btn subb" href="https://github.com/kojipa/ariyamonitor-lite-releases">Lite版のくわしい説明</a>
+    <a class="btn subb" href="https://kojipa.github.io/">アプリの案内ページ</a>
+  </div>
+</section>
+
+<footer>
+  個人が作った非公式のアプリです。日産自動車とは関係ありません。車には値を読み取る命令だけを送ります。使用によって生じた損害について作者は責任を負いません。<br>
+  Nissan、ARIYA は日産自動車の商標です。商品名は各社の商標です。
+</footer>
+</div>
+</body>
+</html>
